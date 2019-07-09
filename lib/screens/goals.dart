@@ -55,18 +55,22 @@ class _GoalsScreenState extends State<GoalsScreen> {
         },
         child: Container(
           alignment: Alignment.center,
-          height: 100,
+          height: 200,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [Color(0xFFC1CAD4), Colors.white])),
+                  colors: [
+                    // Color(0xFFC1CAD4),
+                    Colors.blueGrey.shade200,
+
+                   Colors.white])),
           child: Text(
             goalTitles[index].title,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 25,
+              fontSize: 30,
               fontFamily: 'PlayFair Display',
             ),
             textAlign: TextAlign.center,
@@ -79,7 +83,8 @@ class _GoalsScreenState extends State<GoalsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title,
+            style: TextStyle(fontFamily: 'PlayFair Display')),
       ),
       body: _isLoading
           ? Center(child: CupertinoActivityIndicator())

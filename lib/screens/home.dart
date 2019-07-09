@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:mind_detox/screens/goals.dart';
 import 'package:mind_detox/screens/menu.dart';
@@ -26,6 +27,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getMoods() {
     List responseBody = List();
+    HttpClient _client = new HttpClient();
+    _client.badCertificateCallback =
+        (X509Certificate cert, String host, int port) => true;
+
+    // _client.get(host, port, path)
 
     http.get(Settings.SERVER_URL + 'api/moods.php').then((response) {
       responseBody = json.decode(response.body);
@@ -86,10 +92,16 @@ class _HomeScreenState extends State<HomeScreen> {
               gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [Color(0xFFC1CAD4), Colors.white])),
+                  colors: [
+                // Color(0xFFC1CAD4),
+                Colors.blueGrey.shade200,
+                Colors.white
+              ])),
           child: Text(title,
               style: TextStyle(
-                  color: Colors.white, fontSize: 35, fontFamily: 'Lato')),
+                  color: Colors.white,
+                  fontSize: 35,
+                  fontFamily: 'Playfair Display')),
         ));
   }
 }

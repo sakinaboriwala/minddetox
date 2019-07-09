@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 import 'package:mind_detox/utils/constants.dart';
 import 'package:mind_detox/screens/home.dart';
 import 'package:mind_detox/screens/signup.dart';
+import 'package:mind_detox/screens/forgotpassword.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   @override
@@ -20,6 +23,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   String password;
   bool _isLoading = false;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Map<String, dynamic> responseBody = Map<String, dynamic>();
+  GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +33,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
         child: Scaffold(
+          key: _key,
           backgroundColor: Colors.white,
           body: Center(
             child: SingleChildScrollView(
@@ -57,7 +63,11 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                           height: 30,
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            MaterialPageRoute route = MaterialPageRoute(
+                                builder: (context) => ResetPassword());
+                            Navigator.of(context).push(route);
+                          },
                           child: Text('Forgot your password?'),
                         ),
                         SizedBox(
@@ -115,9 +125,15 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
             MaterialPageRoute(builder: (context) => HomeScreen());
         Navigator.of(context).push(route);
         var graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${facebookLoginResult.accessToken.token}');
+            'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email,picture.height(200)&access_token=${facebookLoginResult.accessToken.token}');
 
         var profile = json.decode(graphResponse.body);
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        prefs.setString('name', profile['first_name']);
+        prefs.setBool('loggedInFb', true);
+        prefs.setString('image', profile['picture']['data']['url']);
+        prefs.setBool('loggedIn', false);
         print(profile.toString());
         print(profile['first_name']);
         print("LoggedIn");
@@ -211,19 +227,32 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           _isLoading = true;
         });
         _formKey.currentState.save();
+        // HttpClient _client = new HttpClient();
+        // _client.badCertificateCallback =
+        //     (X509Certificate cert, String host, int port) => true;
+        // var request =
+        //     await _client.getUrl(Uri.parse("https://www.minddetox.app/"));
+        // var response1 = await request.close();
+        // print(response1.headers);
         http.Response response = await http.post(
             Settings.SERVER_URL + 'api/login.php',
             body: {'email': email, 'password': password});
-        print('LOADED');
         setState(() {
           _isLoading = false;
         });
         if (json.decode(response.body) != null) {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          responseBody = json.decode(response.body);
+          prefs.setString('email', responseBody['email']);
+          prefs.setString('name', responseBody['name']);
+          prefs.setString('userId', responseBody['userid']);
+          prefs.setBool('loggedIn', true);
+          prefs.setBool('loggedInFb', false);
           MaterialPageRoute route =
               MaterialPageRoute(builder: (context) => HomeScreen());
           Navigator.of(context).push(route);
         } else {
-          Scaffold.of(context).showSnackBar(SnackBar(
+          _key.currentState.showSnackBar(SnackBar(
             content: Text('Something went wrong, please try again.'),
           ));
         }

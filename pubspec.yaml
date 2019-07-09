@@ -32,6 +32,7 @@ dev_dependencies:
   fluttery_audio: ^0.0.4
   shared_preferences: ^0.5.3+1
   flutter_facebook_login: ^1.1.1
+  url_launcher: ^5.0.3
 
 flutter_icons: 
   android: false

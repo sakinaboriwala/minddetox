@@ -1,3 +1,3 @@
 class Settings {
-  static const String SERVER_URL = 'http://minddetox.app/';
+  static const String SERVER_URL = 'https://minddetox.app/';
 }
