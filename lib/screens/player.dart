@@ -22,9 +22,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Audio(
-      // audioUrl: widget.goal.audio,
-      audioUrl:
-          'http://minddetox.app/Dashboard/public/assets/imgs/10%20Minute%20Mind%20Reset.mp3',
+      audioUrl: widget.goal.audio,
+      // audioUrl:
+          // 'http://minddetox.app/Dashboard/public/assets/imgs/10%20Minute%20Mind%20Reset.mp3',
       playbackState: PlaybackState.paused,
       child: Scaffold(
         appBar: AppBar(),
@@ -35,9 +35,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 child: Container(
               child: FadeInImage(
                 placeholder: AssetImage('images/placeholder.jpg'),
-                // image: NetworkImage(widget.goal.featureImage),
-                image: NetworkImage(
-                    'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'),
+                image: NetworkImage(widget.goal.featureImage),
+                // image: NetworkImage(
+                    // 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'),
               ),
               height: 200,
               width: 200,

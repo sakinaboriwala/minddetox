@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mind_detox/screens/auth.dart';
+import 'package:mind_detox/screens/home.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _MyAppState();
+  }
+}
+
+class _MyAppState extends State<MyApp> {
+  bool loggedIn = false;
+  bool loggedInFb = false;
   static final Map<int, Color> color = {
     50: Color.fromRGBO(193, 202, 212, .1),
     100: Color.fromRGBO(193, 202, 212, .2),
@@ -18,6 +29,20 @@ class MyApp extends StatelessWidget {
     900: Color.fromRGBO(193, 202, 212, 1),
   };
 
+  @override
+  void initState() {
+    checkLoggedIn();
+    super.initState();
+  }
+
+  checkLoggedIn() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      loggedIn = prefs.getBool('loggedIn');
+      loggedInFb = prefs.getBool('loggedInFb');
+    });
+  }
+
   final MaterialColor colorCustom = MaterialColor(0xFFC1CAD4, color);
   @override
   Widget build(BuildContext context) {
@@ -28,7 +53,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: colorCustom,
           fontFamily: 'Lato',
           canvasColor: colorCustom),
-      home: AuthenticationScreen(),
+      home: loggedIn == null || loggedInFb == null
+          ? AuthenticationScreen()
+          : HomeScreen(),
     );
   }
 }
