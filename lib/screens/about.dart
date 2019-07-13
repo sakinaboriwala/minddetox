@@ -30,7 +30,7 @@ class _AboutScreenState extends State<AboutScreen> {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: Text(
-                'Welcome to Mind Detox Guided Meditations!',
+                'Welcome to Mind Detox Guided Meditations.',
               ),
             ),
             SizedBox(
@@ -39,7 +39,7 @@ class _AboutScreenState extends State<AboutScreen> {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: Text(
-                  'There is no right or wrong way to meditate. Simply close your eyes, listen to my voice and let your mind go wherever it needs to go. You can follow my words or let your mind drift. Just take time out for yourself as you learn to relax and let go. Guided meditation allows you to access a more mindful state with an end feeling as a goal. Each time you listen, it will get easier to connect to those feelings.'),
+                  'There is no right or wrong way to meditate. Simply close your eyes, listen to my voice and let your mind go wherever it needs to go. You can follow my words or let your mind drift. Just take time out for yourself as you learn to relax and let go. Guided meditation allows you to access a more mindful state with an end feeling as a goal. Each time you listen it will get easier to connect to those feelings.'),
             ),
             SizedBox(
               height: 10,
@@ -47,7 +47,7 @@ class _AboutScreenState extends State<AboutScreen> {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: Text(
-                  'I created these recordings because guided meditations have helped me so much through so many times in my life. I have helped many people overcome difficulties using these meditation techniques and I hope they help you too.'),
+                  'I created these recordings because guided meditations have helped me so much through so many times in my life.  I have helped many people overcome difficulties using these meditation techniques and I have hope they help you too.'),
             ),
             SizedBox(
               height: 10,
@@ -84,7 +84,7 @@ class _AboutScreenState extends State<AboutScreen> {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: Text(
-                  'Always listen to these recordings when you are in a safe environment to relax fully. Do not listen whilst driving or operating machinery.'),
+                  'Always listen to these recordings when you are in a safe environment to fully relax. Do not listen when driving or operating machinery.'),
             ),
             SizedBox(
               height: 10,
@@ -100,7 +100,7 @@ class _AboutScreenState extends State<AboutScreen> {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: Text(
-                  'The contents of these recordings should not be reproduced, stored or retransmitted without any prior consent.'),
+                  'The contents of these recordings should not be reproduced, stored or retransmitted without prior consent.'),
             ),
             SizedBox(
               height: 40,

@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
+import 'package:flutter/cupertino.dart';
+
 import 'package:mind_detox/screens/auth.dart';
 import 'package:mind_detox/utils/constants.dart';
 
@@ -18,6 +20,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool modifyPassword = false;
   bool loggedInFb = false;
   String newPassword = '';
+  bool _isLoading = false;
+  bool _isDeleteLoading = false;
   GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
   void initState() {
@@ -28,7 +32,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   setLogin() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      loggedInFb = prefs.getBool('loggedInFb');
+      loggedInFb = prefs.getBool('loggedInFb') != null
+          ? prefs.getBool('loggedInFb')
+          : false;
     });
   }
 
@@ -197,16 +203,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             GestureDetector(
               onTap: () async {
+                setState(() {
+                  _isLoading = true;
+                });
                 Map<dynamic, dynamic> responseBody = Map();
 
                 final SharedPreferences prefs =
                     await SharedPreferences.getInstance();
-                if (!prefs.getBool('loggedInFb')) {
+                if (!loggedInFb) {
                   http.post(Settings.SERVER_URL + 'api/logout.php', body: {
                     'email': prefs.getString('email')
                   }).then((response) {
                     responseBody = json.decode(response.body);
-
+                    print('responseBody');
+                    setState(() {
+                      _isLoading = false;
+                    });
                     if (json.decode(response.body) != null &&
                         responseBody['status'] == 0) {
                       prefs.clear();
@@ -223,23 +235,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 } else {
                   var facebookLogin = FacebookLogin();
                   facebookLogin.logOut();
+
                   prefs.clear();
                   MaterialPageRoute route = MaterialPageRoute(
                       builder: (context) => AuthenticationScreen());
                   Navigator.of(context).pushReplacement(route);
                 }
               },
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  'Logout',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-                ),
-              ),
+              child: _isLoading
+                  ? CupertinoActivityIndicator()
+                  : Container(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w500),
+                      ),
+                    ),
             ),
             !loggedInFb
                 ? GestureDetector(
                     onTap: () async {
+                      setState(() {
+                        _isDeleteLoading = true;
+                      });
                       Map<dynamic, dynamic> responseBody = Map();
 
                       final SharedPreferences prefs =
@@ -248,6 +267,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           body: {
                             'userid': prefs.getString('userId')
                           }).then((response) {
+                        setState(() {
+                          _isDeleteLoading = false;
+                        });
                         responseBody = json.decode(response.body);
 
                         if (json.decode(response.body) != null &&
@@ -264,16 +286,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         }
                       });
                     },
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        'Delete My Profile',
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.orange),
-                      ),
-                    ),
+                    child: _isDeleteLoading
+                        ? CupertinoActivityIndicator()
+                        : Container(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'Delete My Profile',
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.orange),
+                            ),
+                          ),
                   )
                 : Container()
           ],

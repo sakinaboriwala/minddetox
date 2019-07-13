@@ -246,6 +246,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           prefs.setString('email', responseBody['email']);
           prefs.setString('name', responseBody['name']);
           prefs.setString('userId', responseBody['userid']);
+          prefs.setString('gender', responseBody['gender']);
+          prefs.setString('age', responseBody['age']);
+          prefs.setString('description', responseBody['description']);          
           prefs.setBool('loggedIn', true);
           prefs.setBool('loggedInFb', false);
           MaterialPageRoute route =

@@ -33,11 +33,13 @@ dev_dependencies:
   shared_preferences: ^0.5.3+1
   flutter_facebook_login: ^1.1.1
   url_launcher: ^5.0.3
+  in_app_purchase: ^0.2.0+3
+  # audioplayers: ^0.13.1
 
 flutter_icons: 
   android: false
   ios: true
-  image_path: 'images/icon.png'
+  image_path: 'images/icon2.jpeg'
 
 
 # For information on the generic Dart part of this file, see the

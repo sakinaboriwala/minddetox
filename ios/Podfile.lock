@@ -15,6 +15,8 @@ PODS:
     - Flutter
   - fluttery_audio (0.0.1):
     - Flutter
+  - in_app_purchase (0.0.1):
+    - Flutter
   - shared_preferences (0.0.1):
     - Flutter
   - url_launcher (0.0.1):
@@ -23,9 +25,10 @@ PODS:
 DEPENDENCIES:
   - FBSDKCoreKit (= 4.39.1)
   - FBSDKLoginKit (= 4.39.1)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `.symlinks/flutter/ios-release`)
   - flutter_facebook_login (from `.symlinks/plugins/flutter_facebook_login/ios`)
   - fluttery_audio (from `.symlinks/plugins/fluttery_audio/ios`)
+  - in_app_purchase (from `.symlinks/plugins/in_app_purchase/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
@@ -37,11 +40,13 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: ".symlinks/flutter/ios-release"
   flutter_facebook_login:
     :path: ".symlinks/plugins/flutter_facebook_login/ios"
   fluttery_audio:
     :path: ".symlinks/plugins/fluttery_audio/ios"
+  in_app_purchase:
+    :path: ".symlinks/plugins/in_app_purchase/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   url_launcher:
@@ -54,6 +59,7 @@ SPEC CHECKSUMS:
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
   flutter_facebook_login: f1f88c32d5888d6b5f3301fd87cc7de26f02877e
   fluttery_audio: 17c2bd11162094493476e32432b58eef7a0da641
+  in_app_purchase: 5e80de181441b1c149372237f5e65255455e175f
   shared_preferences: 1feebfa37bb57264736e16865e7ffae7fc99b523
   url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
 

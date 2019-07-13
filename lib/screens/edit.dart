@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:http/http.dart' as http;
+
+import 'dart:convert';
+
+import 'package:mind_detox/utils/constants.dart';
 
 class EditProfileScreen extends StatefulWidget {
   String username;
@@ -11,9 +18,29 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   String description;
+
+  @override
+  initState() {
+    setDescripiton();
+    super.initState();
+  }
+
+  setDescripiton() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      description = prefs.getString('description') == null
+          ? ''
+          : prefs.getString('description');
+    });
+  }
+
+  GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
+    print(description);
     return Scaffold(
+      key: _key,
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: GestureDetector(
@@ -30,10 +57,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           style: TextStyle(fontFamily: 'Playfair Display', fontSize: 15),
         ),
         actions: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 17, right: 10),
-            child: Text('Save'),
-          ),
+          GestureDetector(
+            onTap: () {
+              saveEdit();
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: 17, right: 10),
+              child: Text('Save'),
+            ),
+          )
         ],
       ),
       body: Column(
@@ -48,8 +80,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width * 0.8,
               child: TextField(
+                controller: TextEditingController()..text = description,
                 maxLines: 4,
-                obscureText: true,
                 onChanged: (value) {
                   setState(() {
                     description = value;
@@ -63,31 +95,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           FlatButton(
             onPressed: () async {
-              // Map<String, dynamic> responseBody = Map();
-              // final SharedPreferences prefs =
-              //     await SharedPreferences.getInstance();
-              // http.post(Settings.SERVER_URL + 'api/changepwd.php',
-              //     body: {
-              //       'userid': prefs.getString('userId'),
-              //       'password': newPassword
-              //     }).then((response) {
-              //   responseBody = json.decode(response.body);
-
-              //   if (json.decode(response.body) != null &&
-              //       responseBody['status'] == 0) {
-              //     _key.currentState.showSnackBar(SnackBar(
-              //       content: Text(responseBody['msg']),
-              //     ));
-              //     setState(() {
-              //       // modifyPassword = false;
-              //     });
-              //   } else {
-              //     _key.currentState.showSnackBar(SnackBar(
-              //       content: Text(
-              //           'Something went wrong, please try again.'),
-              //     ));
-              //   }
-              // });
+              saveEdit();
             },
             child: Container(
               height: 45,
@@ -100,11 +108,40 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               alignment: Alignment.center,
               child: Text('Save',
                   style: TextStyle(
-                      color: Colors.white, fontFamily: 'Playfair Display', fontSize: 18)),
+                      color: Colors.white,
+                      fontFamily: 'Playfair Display',
+                      fontSize: 18)),
             ),
           ),
         ],
       ),
     );
+  }
+
+  saveEdit() async {
+    Map<String, dynamic> responseBody = Map();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    http.post(Settings.SERVER_URL + 'api/updateprofile.php', body: {
+      'userid': prefs.getString('userId'),
+      'name': prefs.getString('name'),
+      'email': prefs.getString('email'),
+      'gender': prefs.getString('gender'),
+      'description': description,
+      'age': prefs.getString('age')
+    }).then((response) {
+
+      responseBody = json.decode(response.body);
+      print(responseBody);
+      if (json.decode(response.body) != null && responseBody['status'] == 0) {
+        prefs.setString('description', description);
+        _key.currentState.showSnackBar(SnackBar(
+          content: Text(responseBody['msg']),
+        ));
+      } else {
+        _key.currentState.showSnackBar(SnackBar(
+          content: Text('Something went wrong, please try again.'),
+        ));
+      }
+    });
   }
 }

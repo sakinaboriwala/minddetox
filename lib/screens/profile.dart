@@ -106,8 +106,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       username = prefs.getString('name');
-      loggedIn = prefs.getBool('loggedIn');
-      loggedInFb = prefs.getBool('loggedInFb');
+      loggedIn =
+          prefs.getBool('loggedIn') == null ? false : prefs.getBool('loggedIn');
+      loggedInFb = prefs.getBool('loggedInFb') == null
+          ? false
+          : prefs.getBool('loggedInFb');
       image = prefs.getString('image');
     });
   }

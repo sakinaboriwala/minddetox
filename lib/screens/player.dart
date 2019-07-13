@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttery_audio/fluttery_audio.dart';
 
+import 'dart:async';
+
 import 'package:mind_detox/models/goal.dart';
 
 class PlayerScreen extends StatefulWidget {
@@ -18,13 +20,24 @@ class _PlayerScreenState extends State<PlayerScreen> {
   bool playing = false;
   double playbackProgress = 0.0;
   IconData icon = Icons.play_arrow;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    Future.delayed(Duration(seconds: 5), () {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Audio(
       audioUrl: widget.goal.audio,
       // audioUrl:
-          // 'http://minddetox.app/Dashboard/public/assets/imgs/10%20Minute%20Mind%20Reset.mp3',
+      // 'http://minddetox.app/Dashboard/public/assets/imgs/10%20Minute%20Mind%20Reset.mp3',
       playbackState: PlaybackState.paused,
       child: Scaffold(
         appBar: AppBar(),
@@ -33,16 +46,25 @@ class _PlayerScreenState extends State<PlayerScreen> {
           children: <Widget>[
             Center(
                 child: Container(
-              child: FadeInImage(
-                placeholder: AssetImage('images/placeholder.jpg'),
-                image: NetworkImage(widget.goal.featureImage),
-                // image: NetworkImage(
-                    // 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'),
-              ),
+              child: _isLoading
+                  ? CupertinoActivityIndicator()
+                  : Image.network(widget.goal.featureImage),
               height: 200,
               width: 200,
               decoration: BoxDecoration(border: Border.all()),
             )),
+            // Center(
+            //     child: Container(
+            //   child: FadeInImage(
+            //     placeholder: AssetImage('images/placeholder.jpg'),
+            //     image: NetworkImage(widget.goal.featureImage),
+            //     // image: NetworkImage(
+            //     // 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'),
+            //   ),
+            //   height: 200,
+            //   width: 200,
+            //   decoration: BoxDecoration(border: Border.all()),
+            // )),
             SizedBox(
               height: 20,
             ),
@@ -97,27 +119,32 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   ],
                   playerBuilder:
                       (BuildContext context, AudioPlayer player, Widget child) {
-                    return IconButton(
-                      icon: Icon(
-                        playing ? Icons.pause : Icons.play_arrow,
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        if (player.state == AudioPlayerState.playing) {
-                          setState(() {
-                            playing = false;
-                          });
-                          player.pause();
-                        } else if (player.state == AudioPlayerState.paused ||
-                            player.state == AudioPlayerState.completed) {
-                          setState(() {
-                            playing = true;
-                          });
-                          player.play();
-                        }
-                      },
-                    );
+                    return !_isLoading
+                        ? IconButton(
+                            icon: Icon(
+                              playing ? Icons.pause : Icons.play_arrow,
+                              size: 40,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              if (player.state == AudioPlayerState.playing) {
+                                setState(() {
+                                  playing = false;
+                                });
+                                player.pause();
+                              } else if (player.state ==
+                                      AudioPlayerState.paused ||
+                                  player.state == AudioPlayerState.completed) {
+                                setState(() {
+                                  playing = true;
+                                });
+                                player.play();
+                              }
+                            },
+                          )
+                        : Container(
+                            child: CupertinoActivityIndicator(),
+                          );
                   },
                 ),
                 SizedBox(

@@ -9,6 +9,9 @@ import 'package:mind_detox/screens/menu.dart';
 import 'package:mind_detox/utils/constants.dart';
 
 class HomeScreen extends StatefulWidget {
+  bool subscribed;
+  bool isLoading;
+  HomeScreen({this.subscribed, this.isLoading});
   @override
   State<StatefulWidget> createState() {
     return _HomeScreenState();

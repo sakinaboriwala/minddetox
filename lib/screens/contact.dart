@@ -13,9 +13,11 @@ class ContactScreen extends StatefulWidget {
 }
 
 class _ContactScreenState extends State<ContactScreen> {
-  String name;
-  String email;
-  String message;
+  String name = '';
+  String email = '';
+  String message = '';
+  String contact = '';
+
   GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class _ContactScreenState extends State<ContactScreen> {
           children: <Widget>[
             ListTile(
               leading: Icon(Icons.mail),
-              title: Text('contact@example.com'),
+              title: Text('contact@fionalamb.com'),
               onTap: () {
                 launch("mailto:contact@fionalamb.com");
               },
@@ -63,7 +65,6 @@ class _ContactScreenState extends State<ContactScreen> {
               padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width * 0.8,
               child: TextField(
-                obscureText: true,
                 onChanged: (value) {
                   setState(() {
                     name = value;
@@ -78,7 +79,6 @@ class _ContactScreenState extends State<ContactScreen> {
               padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width * 0.8,
               child: TextField(
-                obscureText: true,
                 onChanged: (value) {
                   setState(() {
                     email = value;
@@ -93,7 +93,20 @@ class _ContactScreenState extends State<ContactScreen> {
               padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width * 0.8,
               child: TextField(
-                obscureText: true,
+                onChanged: (value) {
+                  setState(() {
+                    contact = value;
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Contact No.',
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: TextField(
                 onChanged: (value) {
                   setState(() {
                     message = value;
@@ -116,11 +129,17 @@ class _ContactScreenState extends State<ContactScreen> {
     return FlatButton(
       onPressed: () async {
         http.Response response = await http.post(
-            Settings.SERVER_URL + 'api/forgetpwd.php',
-            body: {'email': email, 'name': name, 'msg': message});
+            Settings.SERVER_URL + 'api/contactus.php',
+            body: json.encode({
+              'email': email,
+              'name': name,
+              'contact': contact,
+              'message': message
+            }));
         setState(() {
           responseBody = json.decode(response.body);
         });
+        print(responseBody);
         if (json.decode(response.body) != null) {
           _key.currentState.showSnackBar(SnackBar(
             content: Text(responseBody['msg']),

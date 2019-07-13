@@ -5,7 +5,9 @@ import 'dart:convert';
 
 import 'package:mind_detox/utils/constants.dart';
 import 'package:mind_detox/models/goal.dart';
+// import 'package:mind_detox/screens/playerscreen.dart';
 import 'package:mind_detox/screens/player.dart';
+import 'package:mind_detox/screens/player_widget.dart';
 
 class GoalsScreen extends StatefulWidget {
   final String title;
@@ -51,6 +53,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
         onTap: () {
           MaterialPageRoute route = MaterialPageRoute(
               builder: (context) => PlayerScreen(goalTitles[index]));
+              // builder: (context) => PlayerWidget(url: goalTitles[index].audio,));
           Navigator.push(context, route);
         },
         child: Container(
